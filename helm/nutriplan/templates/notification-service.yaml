@@ -1,0 +1,20 @@
+{{- if .Values.notificationService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nutriplan.fullname" . }}-notification
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nutriplan.labels" . | nindent 4 }}
+    app: notification-service
+spec:
+  type: {{ .Values.notificationService.service.type }}
+  selector:
+    app: notification-service
+  ports:
+    - port: {{ .Values.notificationService.service.port }}
+      targetPort: {{ .Values.notificationService.service.targetPort }}
+      {{- if and (eq .Values.notificationService.service.type "NodePort") .Values.notificationService.service.nodePort }}
+      nodePort: {{ .Values.notificationService.service.nodePort }}
+      {{- end }}
+{{- end }}

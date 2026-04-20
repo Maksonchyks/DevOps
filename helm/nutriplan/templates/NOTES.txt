@@ -1,0 +1,23 @@
+NutriPlan успішно розгорнуто!
+
+Отримати URL сервісів (minikube):
+
+  NutritionService:
+    minikube service {{ include "nutriplan.fullname" . }}-nutrition -n {{ .Release.Namespace }} --url
+
+  NotificationService:
+    minikube service {{ include "nutriplan.fullname" . }}-notification -n {{ .Release.Namespace }} --url
+
+Перевірити стан podів:
+  kubectl get pods -n {{ .Release.Namespace }}
+
+Переглянути логи NutritionService:
+  kubectl logs -l app=nutrition-service -n {{ .Release.Namespace }} -f
+
+Для scale up (helm upgrade):
+  helm upgrade {{ .Release.Name }} ./helm/nutriplan \
+    --set nutritionService.replicaCount=3 \
+    -n {{ .Release.Namespace }}
+
+Для rollback:
+  helm rollback {{ .Release.Name }} -n {{ .Release.Namespace }}

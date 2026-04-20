@@ -1,0 +1,92 @@
+# ──────────────────────────────────────────────
+# NutriPlan Helm Chart — values.yaml
+# ──────────────────────────────────────────────
+
+# ── NutritionService ──────────────────────────
+nutritionService:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: maksondep/nutriplan-nutrition
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8080
+    nodePort: 30001
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  readinessProbe:
+    httpGet:
+      path: /swagger/index.html
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    failureThreshold: 6
+  livenessProbe:
+    httpGet:
+      path: /swagger/index.html
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    failureThreshold: 3
+
+# ── NotificationService ───────────────────────
+notificationService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: maksondep/nutriplan-notification
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8080
+    nodePort: 30002
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+  readinessProbe:
+    httpGet:
+      path: /swagger/index.html
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    failureThreshold: 6
+  livenessProbe:
+    httpGet:
+      path: /swagger/index.html
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    failureThreshold: 3
+
+# ── PostgreSQL (bitnami/postgresql) ───────────
+postgresql:
+  enabled: true
+  auth:
+    username: postgres
+    password: postgres
+    database: nutriplan
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"

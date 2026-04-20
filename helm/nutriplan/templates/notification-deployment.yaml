@@ -1,0 +1,36 @@
+{{- if .Values.notificationService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nutriplan.fullname" . }}-notification
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nutriplan.labels" . | nindent 4 }}
+    app: notification-service
+spec:
+  replicas: {{ .Values.notificationService.replicaCount }}
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: notification-service
+          image: "{{ .Values.notificationService.image.repository }}:{{ .Values.notificationService.image.tag }}"
+          imagePullPolicy: {{ .Values.notificationService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.notificationService.service.targetPort }}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+          readinessProbe:
+            {{- toYaml .Values.notificationService.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.notificationService.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.notificationService.resources | nindent 12 }}
+{{- end }}
