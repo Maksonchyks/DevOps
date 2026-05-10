@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nutrition-service
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: nutrition-service
@@ -17,7 +17,6 @@ spec:
     spec:
       containers:
         - name: nutrition-service
-          # Замінити maksondep на свій логін
           image: nutriplan-nutrition:latest
           imagePullPolicy: Never
           ports:
@@ -25,7 +24,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: nutrition-config
-          # readinessProbe: HTTP перевірка — Pod отримує трафік тільки коли відповідає 200
           readinessProbe:
             httpGet:
               path: /swagger/index.html
