@@ -1,0 +1,11 @@
+nutritionService:
+  image:
+    repository: nutriplan-nutrition
+    tag: latest
+    pullPolicy: Never
+
+notificationService:
+  image:
+    repository: nutriplan-notification
+    tag: latest
+    pullPolicy: Never

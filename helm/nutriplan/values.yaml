@@ -7,14 +7,14 @@ nutritionService:
   enabled: true
   replicaCount: 2
   image:
-    repository: maksondep/nutriplan-nutrition
+    repository: nutriplan-nutrition
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   service:
     type: NodePort
     port: 80
     targetPort: 8080
-    nodePort: 30001
+    nodePort: 30011
   resources:
     requests:
       memory: "128Mi"
@@ -42,14 +42,14 @@ notificationService:
   enabled: true
   replicaCount: 1
   image:
-    repository: maksondep/nutriplan-notification
+    repository: nutriplan-notification
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   service:
     type: NodePort
     port: 80
     targetPort: 8080
-    nodePort: 30002
+    nodePort: 30012
   resources:
     requests:
       memory: "64Mi"
@@ -75,6 +75,8 @@ notificationService:
 # ── PostgreSQL (bitnami/postgresql) ───────────
 postgresql:
   enabled: true
+  image:
+    tag: "latest"
   auth:
     username: postgres
     password: postgres
