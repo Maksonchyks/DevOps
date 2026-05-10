@@ -17,13 +17,15 @@ spec:
     spec:
       containers:
         - name: nutrition-service
-          image: maksondep/nutriplan-nutrition:latest
+          # Замінити maksondep на свій логін
+          image: nutriplan-nutrition:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: nutrition-config
+          # readinessProbe: HTTP перевірка — Pod отримує трафік тільки коли відповідає 200
           readinessProbe:
             httpGet:
               path: /swagger/index.html
@@ -31,6 +33,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             failureThreshold: 6
+          # livenessProbe: якщо застосунок завис — k8s перезапустить Pod
           livenessProbe:
             httpGet:
               path: /swagger/index.html

@@ -39,6 +39,7 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+          # readinessProbe: перевіряє чи БД готова приймати з'єднання
           readinessProbe:
             exec:
               command:
@@ -48,6 +49,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 6
+          # livenessProbe: перевіряє чи процес БД живий
           livenessProbe:
             exec:
               command:
