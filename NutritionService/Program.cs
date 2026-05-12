@@ -42,6 +42,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+
 app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI();
