@@ -1,0 +1,38 @@
+{{- if .Values.nutritionService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nutriplan.fullname" . }}-nutrition
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nutriplan.labels" . | nindent 4 }}
+    app: nutrition-service
+spec:
+  replicas: {{ .Values.nutritionService.replicaCount }}
+  selector:
+    matchLabels:
+      app: nutrition-service
+  template:
+    metadata:
+      labels:
+        app: nutrition-service
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: nutrition-service
+          image: "{{ .Values.nutritionService.image.repository }}:{{ .Values.nutritionService.image.tag }}"
+          imagePullPolicy: {{ .Values.nutritionService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.nutritionService.service.targetPort }}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__DefaultConnection
+              value: {{ include "nutriplan.postgresConnString" . | quote }}
+          readinessProbe:
+            {{- toYaml .Values.nutritionService.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.nutritionService.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.nutritionService.resources | nindent 12 }}
+{{- end }}
